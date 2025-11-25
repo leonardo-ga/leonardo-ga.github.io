@@ -13,6 +13,7 @@ export default {
     {
         outDir: '../docs',
         emptyOutDir: true,
-        sourcemap: true
+        sourcemap: true,
+        target: 'esnext' // makes build work...
     }
 }
