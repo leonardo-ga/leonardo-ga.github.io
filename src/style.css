@@ -132,6 +132,7 @@ Timeline style
 
 /* === Projects Section === */
 #projects {
+  container-type: inline-size;
   max-width: 1100px;
   margin: 0 auto;
   padding: 100px 40px;
@@ -146,17 +147,32 @@ Timeline style
 }
 
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 40px;
 }
 
 .project-card {
+  flex: 0 1 100%;
+  min-width: 0;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@container (min-width: 680px) {
+  .project-card {
+    flex-basis: calc((100% - 40px) / 2);
+  }
+}
+
+@container (min-width: 1040px) {
+  .project-card {
+    flex-basis: calc((100% - 80px) / 3);
+  }
 }
 
 .project-card:hover {
@@ -172,13 +188,6 @@ Timeline style
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.project-preview.placeholder {
-  background: rgba(255,255,255,0.1);
-  color: #ccc;
-  font-size: 1rem;
-  letter-spacing: 1px;
 }
 
 .project-info {
@@ -206,11 +215,6 @@ Timeline style
 
 .project-link:hover {
   color: #9bdcff;
-}
-
-.project-link.disabled {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 embed {
