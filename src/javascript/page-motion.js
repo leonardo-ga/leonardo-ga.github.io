@@ -4,6 +4,7 @@ const name = document.querySelector('.shared-name');
 const storageKey = 'portfolio-name-transition';
 const contentSelector = '.career-page main, .career-header > p, .career-home .career-choices, .landing-header > p';
 const surfaces = [...document.querySelectorAll(contentSelector)];
+const globeButton = document.querySelector('[data-globe-toggle]');
 const siteRoot = new URL(document.querySelector('[data-home]').href);
 const pagePaths = new Set(['', 'mathematics/', 'software/'].map(page => new URL(page, siteRoot).pathname));
 let navigating = false;
@@ -27,14 +28,57 @@ function animateContent(entering) {
   });
 }
 
+function puffGlobeOut() {
+  if (!globeButton || motionPreference.matches) return Promise.resolve();
+  return globeButton.animate([
+    { opacity: 1, transform: 'scale(1)', filter: 'blur(0)' },
+    { opacity: 0, transform: 'scale(1.45)', filter: 'blur(4px)' }
+  ], { duration: 180, easing: 'ease-out', fill: 'forwards' }).finished.catch(() => {});
+}
+
 let previous;
 try {
   previous = JSON.parse(sessionStorage.getItem(storageKey));
   sessionStorage.removeItem(storageKey);
 } catch {}
 
+const arriving = previous?.destination === location.pathname &&
+  Date.now() - previous.time >= 0 && Date.now() - previous.time < 10000;
+const navigation = document.querySelector('.career-nav');
+const activeLink = navigation.querySelector('[aria-current="page"]');
+const indicator = document.createElement('span');
+indicator.className = 'nav-indicator';
+indicator.setAttribute('aria-hidden', 'true');
+navigation.prepend(indicator);
+
+function positionIndicator() {
+  const navRect = navigation.getBoundingClientRect();
+  const rect = activeLink.getBoundingClientRect();
+  Object.assign(indicator.style, {
+    left: `${rect.left - navRect.left}px`,
+    top: `${rect.top - navRect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`
+  });
+  return rect;
+}
+const activeRect = positionIndicator();
+navigation.classList.add('has-indicator');
+if (arriving && previous.navigation && !motionPreference.matches && typeof indicator.animate === 'function') {
+  const from = previous.navigation;
+  if ([from.left, from.top, from.width, from.height].every(Number.isFinite) && from.width > 0 && from.height > 0) {
+    indicator.animate([
+      { transform: `translate(${from.left - activeRect.left}px, ${from.top - activeRect.top}px) scale(${from.width / activeRect.width}, ${from.height / activeRect.height})` },
+      { transform: 'translate(0, 0) scale(1)' }
+    ], { duration: 420, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
+  }
+}
+if ('ResizeObserver' in window) new ResizeObserver(positionIndicator).observe(navigation);
+else window.addEventListener('resize', positionIndicator);
+document.fonts?.ready.then(positionIndicator);
+
 if (name && !motionPreference.matches && typeof name.animate === 'function') {
-  if (previous?.destination === location.pathname && Date.now() - previous.time >= 0 && Date.now() - previous.time < 10000) {
+  if (arriving) {
     animateContent(true);
     const rect = name.getBoundingClientRect();
     const values = [previous.left, previous.top, previous.width, previous.height];
@@ -71,6 +115,7 @@ if (name && !motionPreference.matches && typeof name.animate === 'function') {
     if (navigating) return;
     navigating = true;
     const rect = name.getBoundingClientRect();
+    const navRect = activeLink.getBoundingClientRect();
     try {
       sessionStorage.setItem(storageKey, JSON.stringify({
         destination: destination.pathname,
@@ -78,11 +123,14 @@ if (name && !motionPreference.matches && typeof name.animate === 'function') {
         left: rect.left,
         top: rect.top,
         width: rect.width,
-        height: rect.height
+        height: rect.height,
+        navigation: navRect.top >= 0 && navRect.bottom <= innerHeight ? {
+          left: navRect.left, top: navRect.top, width: navRect.width, height: navRect.height
+        } : null
       }));
     } catch {}
     try {
-      Promise.all(animateContent(false)).then(() => location.assign(destination.href));
+      Promise.all([...animateContent(false), puffGlobeOut()]).then(() => location.assign(destination.href));
     } catch {
       location.assign(destination.href);
     }
@@ -98,5 +146,8 @@ window.addEventListener('pageshow', event => {
   navigating = false;
   surfaces.forEach(element => element.getAnimations().forEach(animation => animation.cancel()));
   name?.getAnimations().forEach(animation => animation.cancel());
+  indicator.getAnimations().forEach(animation => animation.cancel());
+  globeButton?.getAnimations().forEach(animation => animation.cancel());
+  positionIndicator();
   delete document.documentElement.dataset.namePending;
 });

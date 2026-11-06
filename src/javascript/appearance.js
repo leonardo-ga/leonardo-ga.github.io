@@ -14,8 +14,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('appearance-ready')));
     const icons = {
-      sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
-      moon: '<path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/>',
       globe: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>'
     };
     const setIcon = (button, icon, label) => {
@@ -26,7 +24,9 @@
     const themeButton = document.querySelector('[data-theme-toggle]');
     const updateThemeButton = () => {
       const dark = root.dataset.theme === 'dark';
-      setIcon(themeButton, dark ? 'sun' : 'moon', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      const label = dark ? 'Switch to light mode' : 'Switch to dark mode';
+      themeButton.setAttribute('aria-label', label);
+      themeButton.title = label;
     };
     updateThemeButton();
     systemTheme.addEventListener('change', updateThemeButton);
