@@ -8,11 +8,12 @@ if (!canvas) throw new Error('Globe canvas is missing');
 
 // Reject the import on texture failure so the appearance control can show a fallback.
 const loader = new THREE.TextureLoader();
+const siteRoot = new URL(document.querySelector('[data-home]').href);
 const [starSprite, colorMap, elevMap, alphaMap] = await Promise.all([
-  loader.loadAsync('./textures/circle.png'),
-  loader.loadAsync('./textures/04_rainbow1k.jpg'),
-  loader.loadAsync('./textures/01_earthbump1k.jpg'),
-  loader.loadAsync('./textures/02_earthspec1k.jpg')
+  loader.loadAsync(new URL('textures/circle.png', siteRoot).href),
+  loader.loadAsync(new URL('textures/04_rainbow1k.jpg', siteRoot).href),
+  loader.loadAsync(new URL('textures/01_earthbump1k.jpg', siteRoot).href),
+  loader.loadAsync(new URL('textures/02_earthspec1k.jpg', siteRoot).href)
 ]);
 
 const scene = new THREE.Scene();

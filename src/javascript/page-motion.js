@@ -4,8 +4,8 @@ const name = document.querySelector('.shared-name');
 const storageKey = 'portfolio-name-transition';
 const contentSelector = '.career-page main, .career-header > p, .career-home .career-choices, .landing-header > p';
 const surfaces = [...document.querySelectorAll(contentSelector)];
-const pagePaths = new Set(['index.html', 'mathematics.html', 'development.html'].map(page => new URL(page, location.href).pathname));
-pagePaths.add(new URL('.', location.href).pathname);
+const siteRoot = new URL(document.querySelector('[data-home]').href);
+const pagePaths = new Set(['', 'mathematics/', 'software/'].map(page => new URL(page, siteRoot).pathname));
 let navigating = false;
 
 function animateContent(entering) {

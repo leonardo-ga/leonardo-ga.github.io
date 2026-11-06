@@ -19,8 +19,8 @@ export default {
         rollupOptions: {
             input: {
                 home: fileURLToPath(new URL('./src/index.html', import.meta.url)),
-                mathematics: fileURLToPath(new URL('./src/mathematics.html', import.meta.url)),
-                development: fileURLToPath(new URL('./src/development.html', import.meta.url))
+                mathematics: fileURLToPath(new URL('./src/mathematics/index.html', import.meta.url)),
+                software: fileURLToPath(new URL('./src/software/index.html', import.meta.url))
             }
         },
         target: 'esnext' // The optional globe module uses top-level await.

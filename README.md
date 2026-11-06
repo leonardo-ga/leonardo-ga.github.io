@@ -2,6 +2,8 @@
 
 A Vite site with separate Mathematics and Software Development pages, shared light/dark themes, and an optional Three.js globe on the software page.
 
+Pages are available at `/`, `/mathematics/`, and `/software/`. Each route uses a directory index so URLs work directly on GitHub Pages without routing rules.
+
 ## Local development
 
 ```bash
