@@ -227,7 +227,78 @@ a:hover {
 .career-home {
   min-height: 100svh;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.career-math {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.career-math > .site-topbar,
+.career-math > .career-header,
+.career-math > .site-footer {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 880px;
+  flex-shrink: 0;
+}
+
+.career-math > main {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.career-math .academic-sections {
+  padding-bottom: 16px;
+}
+
+@media (max-height: 760px) {
+  .career-math:not(:has(details[open])) {
+    --section-space: 16px;
+  }
+}
+
+.site-footer {
+  max-width: var(--content-width);
+  margin: 12px auto 0;
+  padding: 8px var(--page-gutter) 16px;
+  color: var(--muted-text);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 12px;
+  text-align: center;
+}
+
+.footer-content a,
+.footer-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+:root[data-theme="dark"] .github-icon {
+  filter: invert(1);
+}
+
+.career-home .site-footer {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 880px;
+  margin-top: 0;
 }
 
 .career-home .site-topbar {
