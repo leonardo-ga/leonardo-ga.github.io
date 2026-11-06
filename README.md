@@ -1,4 +1,4 @@
-﻿# Leonardo Gasparro's portfolio
+# Leonardo Raffaello Maximilian Gasparro's portfolio
 
 A Vite site with separate Mathematics and Software Development pages, shared light/dark themes, and an optional Three.js globe on the software page.
 
