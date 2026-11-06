@@ -58,6 +58,7 @@ corner.addEventListener('focusout', event => {
 
 let compact = false;
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const mobilePreference = matchMedia('(max-width: 600px)');
 let generation = 0;
 let animations = [];
 let ghosts = [];
@@ -65,6 +66,24 @@ let animatedButtons = [];
 let targets = [];
 
 function moveControls(toCorner) {
+  if (mobilePreference.matches) {
+    corner.insertBefore(appearance, menu);
+    if (toCorner) {
+      const count = appearance.querySelectorAll('button').length + 1;
+      placeholder.style.width = `${count * menuButton.offsetWidth + (count - 1) * 8}px`;
+      placeholder.hidden = false;
+      document.body.append(corner);
+      corner.classList.remove('is-docked');
+    } else {
+      placeholder.before(corner);
+      placeholder.hidden = true;
+      corner.classList.add('is-docked');
+    }
+    return;
+  }
+  document.body.append(corner);
+  corner.classList.remove('is-docked');
+  placeholder.style.width = '';
   if (toCorner) {
     placeholder.hidden = false;
     corner.insertBefore(appearance, menu);
@@ -74,12 +93,14 @@ function moveControls(toCorner) {
   }
 }
 function setHeaderState(inCorner) {
-  navigation.inert = inCorner;
-  navigation.setAttribute('aria-hidden', String(inCorner));
+  const mobile = mobilePreference.matches;
+  navigation.inert = inCorner || mobile;
+  navigation.setAttribute('aria-hidden', String(inCorner || mobile));
+  header.classList.toggle('mobile-navigation', mobile);
   header.classList.toggle('has-corner-controls', inCorner);
-  corner.classList.toggle('is-visible', inCorner);
-  corner.setAttribute('aria-hidden', String(!inCorner));
-  corner.inert = !inCorner;
+  corner.classList.toggle('is-visible', inCorner || mobile);
+  corner.setAttribute('aria-hidden', String(!inCorner && !mobile));
+  corner.inert = !inCorner && !mobile;
 }
 function clearAnimation() {
   generation++;
@@ -98,25 +119,38 @@ function settle() {
 
 const relative = (from, to) => `translate(${from.left - to.left}px, ${from.top - to.top}px)`;
 function sourceGeometry() {
+  if (mobilePreference.matches) {
+    const buttons = [menuButton, ...appearance.querySelectorAll('[data-globe-toggle]'), ...appearance.querySelectorAll('[data-theme-toggle]')];
+    const slot = placeholder.getBoundingClientRect();
+    return {
+      mobile: true,
+      links: [],
+      buttons: new Map(buttons.map((button, index) => [button, placeholder.hidden ? button.getBoundingClientRect() : {
+        left: slot.left + index * (menuButton.offsetWidth + 8), top: slot.top
+      }]))
+    };
+  }
   const links = [...navigation.querySelectorAll('a')].map(link => ({ link, rect: link.getBoundingClientRect() }));
   const slot = placeholder.hidden ? appearance.getBoundingClientRect() : placeholder.getBoundingClientRect();
+  const step = menuButton.offsetWidth + 8;
   const buttons = new Map([...appearance.querySelectorAll('button')].map(button => [button, {
-    left: slot.left + (button.hasAttribute('data-theme-toggle') ? 46 : 0),
+    left: slot.left + (button.hasAttribute('data-theme-toggle') ? step : 0),
     top: slot.top
   }]));
   return { links, buttons };
 }
 function frameSpecs(source) {
-  const row = targets.map((rect, index) => ({ left: targets[0].left - (animatedButtons.length - 1 - index) * 46, top: targets[0].top }));
-  const lastLink = source.links[source.links.length - 1].rect;
-  const collapse = { left: Math.min(lastLink.right + 8, row[0].left), top: targets[0].top };
+  const step = targets[0].width + 8;
+  const row = targets.map((rect, index) => ({ left: targets[0].left - (animatedButtons.length - 1 - index) * step, top: targets[0].top }));
+  const lastLink = source.links[source.links.length - 1]?.rect;
+  const collapse = source.mobile ? source.buttons.get(menuButton) : { left: Math.min(lastLink.right + 8, row[0].left), top: targets[0].top };
   const words = source.links.map(({ link, rect }, index) => {
     const ghost = ghosts[index];
     Object.assign(ghost.style, {
       left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px`,
       font: getComputedStyle(link).font, color: getComputedStyle(link).color
     });
-    const collapsed = { opacity: 0, transform: `translate(${collapse.left + 19 - rect.left - rect.width / 2}px, ${collapse.top - rect.top}px) scale(0.1)`, filter: 'blur(3px)' };
+    const collapsed = { opacity: 0, transform: `translate(${collapse.left + targets[0].width / 2 - rect.left - rect.width / 2}px, ${collapse.top - rect.top}px) scale(0.1)`, filter: 'blur(3px)' };
     return [
       { offset: 0, opacity: 1, transform: 'translate(0, 0) scale(1)', filter: 'blur(0)' },
       { offset: 0.3, ...collapsed },
@@ -124,9 +158,9 @@ function frameSpecs(source) {
     ];
   });
   const controls = animatedButtons.map((button, index) => {
-    const from = index === 0 ? collapse : source.buttons.get(button);
+    const from = index === 0 && !source.mobile ? collapse : source.buttons.get(button);
     return [
-      { offset: 0, transform: relative(from, targets[index]), opacity: index === 0 ? 0 : 1 },
+      { offset: 0, transform: relative(from, targets[index]), opacity: index === 0 && !source.mobile ? 0 : 1 },
       { offset: 0.3, transform: relative(from, targets[index]), opacity: 1 },
       { offset: 0.65, transform: relative(row[index], targets[index]), opacity: 1 },
       { offset: 1, transform: 'translate(0, 0)', opacity: 1 }
@@ -189,7 +223,7 @@ function syncHeader() {
   const source = sourceGeometry();
   compact = next;
   closeMenu();
-  const focusTarget = focusedControl || (compact && focusedNavigation ? menuButton : !compact && focusedCorner ? navigation.querySelector('[aria-current="page"]') : null);
+  const focusTarget = focusedControl || (document.activeElement === menuButton ? menuButton : compact && focusedNavigation ? menuButton : !compact && focusedCorner ? navigation.querySelector('[aria-current="page"]') : null);
   const animate = !motionPreference.matches && typeof menuButton.animate === 'function' && (animations.length || (compact && rect.bottom > 0));
   if (animate) runHandoff(source, focusTarget);
   else {
@@ -205,5 +239,7 @@ if ('IntersectionObserver' in window) {
 window.addEventListener('resize', () => { settle(); syncHeader(); });
 window.addEventListener('pagehide', settle);
 motionPreference.addEventListener('change', settle);
+mobilePreference.addEventListener('change', () => { closeMenu(); settle(); syncHeader(); });
 window.addEventListener('pageshow', syncHeader);
+settle();
 syncHeader();

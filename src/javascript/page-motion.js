@@ -64,7 +64,8 @@ function positionIndicator() {
 }
 const activeRect = positionIndicator();
 navigation.classList.add('has-indicator');
-if (arriving && previous.navigation && !motionPreference.matches && typeof indicator.animate === 'function') {
+if (arriving && previous.navigation && activeRect.width > 0 && activeRect.height > 0 &&
+  !motionPreference.matches && typeof indicator.animate === 'function') {
   const from = previous.navigation;
   if ([from.left, from.top, from.width, from.height].every(Number.isFinite) && from.width > 0 && from.height > 0) {
     indicator.animate([
