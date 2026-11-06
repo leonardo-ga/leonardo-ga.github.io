@@ -8,8 +8,8 @@ export default class InteractiveEarth {
   }
 
   loadParameters(params) {
-    this.icoDetails = params.icoDetails || 10;
-    this.pointsDetail = params.icoDetails || 120;
+    this.icoDetails = params.icoDetail ?? 10;
+    this.pointsDetail = params.pointsDetail ?? 120;
     this.colorMap = params.textures.colorMap;
     this.elevMap = params.textures.elevMap;
     this.alphaMap = params.textures.alphaMap;
@@ -64,6 +64,7 @@ export default class InteractiveEarth {
     this.fragmentShader = `
         uniform sampler2D colorTexture;
         uniform sampler2D alphaTexture;
+        uniform float colorStrength;
 
         varying vec2 vUv;
         varying float vVisible;
@@ -71,12 +72,13 @@ export default class InteractiveEarth {
         void main() {
             if (floor(vVisible + 0.1) == 0.0) discard;
             float alpha = 1.0 - texture2D(alphaTexture, vUv).r;
-            vec3 color = texture2D(colorTexture, vUv).rgb;
+            vec3 color = texture2D(colorTexture, vUv).rgb * colorStrength;
             gl_FragColor = vec4(color, alpha);
         }
     `;
     this.uniforms = {
         size: { type: "f", value: 4.0 },
+        colorStrength: { value: 1.0 },
         colorTexture: { type: "t", value: this.colorMap },
         elevTexture: { type: "t", value: this.elevMap },
         alphaTexture: { type: "t", value: this.alphaMap }
@@ -86,8 +88,8 @@ export default class InteractiveEarth {
   /**
    * For Earth movement
    */
-  update() {
-    this.innerModel.rotation.y += 0.002;
+  update(delta = 1 / 60) {
+    this.innerModel.rotation.y += 0.12 * delta;
   }
   
 }

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Developer | Leonardo Gasparro</title>
+    <script>
+        (() => {
+            let theme;
+            try { theme = localStorage.getItem('portfolio-theme'); } catch {}
+            document.documentElement.dataset.theme = ['light', 'dark'].includes(theme)
+                ? theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            try {
+                const motion = JSON.parse(sessionStorage.getItem('portfolio-name-transition'));
+                if (motion && motion.destination === location.pathname && Date.now() - motion.time < 10000
+                    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.dataset.namePending = '';
+                    setTimeout(() => delete document.documentElement.dataset.namePending, 1500);
+                }
+            } catch {}
+        })();
+    </script>
+    <script type="module" src="./javascript/appearance.js"></script>
+    <script type="module" src="./javascript/page-motion.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="./my-favicon.png">
+
+    <script type="module" src="./javascript/timeline_script.js"></script>
+    <script type="module" src="./javascript/scroll-reveal.js"></script>
+
+    <meta name="google-site-verification" content="lAN7mgK0pbM2lvqXskIQ27BINFMNxp_0ydv0qoD0PsA" />
+    <meta name="description" content="Web applications, interactive experiences, and mathematical thinking in code.">
+</head>
+
+<body class="career-page career-dev">
+    <canvas class="webgl-background" aria-hidden="true"></canvas>
+    <div class="site-topbar">
+        <nav class="career-nav" aria-label="Main navigation">
+            <a href="./index.html">Home</a>
+            <a href="./mathematics.html">Mathematics</a>
+            <a href="./development.html" aria-current="page">Software development</a>
+        </nav>
+        <div class="appearance-controls" role="group" aria-label="Appearance">
+            <button type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button>
+            <button type="button" data-globe-toggle aria-pressed="false" aria-label="Turn globe on" title="Turn globe on"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg></button>
+        </div>
+    </div>
+    <header class="career-header">
+        <h1><span class="shared-name">Leonardo Raffaello Maximilian Gasparro</span></h1>
+        <p>Software developer · Web applications and interactive experiences</p>
+    </header>
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Software developer with experience building web applications for finance and banking,
+            including robo-advisory and digital investment platforms. My background in mathematics
+            also informs my interactive visualizations, physics simulations, and logic-based projects.</p>
+        </section>
+
+        <section class="timeline" data-type="experience">
+            <h2>Experience</h2>
+            <div class="timeline-container">
+                <div class="timeline-progress"></div>
+                <div class="timeline-item">
+                    <div class="timeline-icon">Oct 2026 - present</div>
+                    <div class="timeline-content">
+                        <h3>Doctoral Researcher in Mathematics</h3>
+                        <span>Università degli Studi di Milano</span>
+                        <p>Research in mathematical logic, focusing on nonstandard analysis and ultrafilters.
+                        <a href="./mathematics.html">Research and publications</a></p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon">Jan 2026 - Sept 2026</div>
+                    <div class="timeline-content">
+                        <h3>Front-end software developer</h3>
+                        <span>IRISCUBE Reply, Milano</span>
+                        <p>Developed web applications for clients in the finance and banking sector. Primary front-end engineer in the business unit.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon">May 2022 - Sept 2024</div>
+                    <div class="timeline-content">
+                        <h3>Full-stack software developer</h3>
+                        <span>Accenture, Milano</span>
+                        <p>Developed web applications for clients, focusing on robo-advisory and digital
+                        investment platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+
+                <div class="project-card">
+                    <div class="project-preview">
+                        <iframe src="https://leonardo-ga.github.io/car-physics-engine" title="Car Physics Engine preview" loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <h3>Car Physics Engine</h3>
+                        <p>A physics engine specifically for cars.</p>
+                        <a href="https://leonardo-ga.github.io/car-physics-engine/#debug" target="_blank" rel="noopener noreferrer"
+                        class="project-link">Try the simulation</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-preview">
+                        <iframe src="https://leonardo-ga.github.io/morphing-shapes" title="Morphing shapes preview" loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <h3>Morphing Three.js geometry</h3>
+                        <p>An interactive exploration of continuous transitions between cubes and spheres.</p>
+                        <a href="https://leonardo-ga.github.io/morphing-shapes" target="_blank" rel="noopener noreferrer" class="project-link">Explore the demo</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-preview">
+                        <iframe src="https://leonardo-ga.github.io/calc-net-salary-from-ral" title="Net salary calculator preview" loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <h3>Net salary calculator</h3>
+                        <p>A simple simulator of your net salary, given your RAL and other secondary information.</p>
+                        <a href="https://leonardo-ga.github.io/calc-net-salary-from-ral" target="_blank" rel="noopener noreferrer" class="project-link">Open calculator</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-preview">
+                        <iframe src="https://leonardo-ga.github.io/sudoku-z3" title="Sudoku Game Engine preview" loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <h3>Sudoku Game Engine</h3>
+                        <p>A minimal Sudoku game engine with solution verification and solution finder.</p>
+                        <a href="https://leonardo-ga.github.io/sudoku-z3" target="_blank" rel="noopener noreferrer" class="project-link">Play Sudoku</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-preview">
+                        <iframe src="https://leonardo-ga.github.io/typewriter-animation/" title="Typewriter animation preview" loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <h3>A Simple Typewriter Animation</h3>
+                        <p>A minimal JavaScript project that simulates a typewriter effect with customizable speed and text.
+                        </p>
+                        <a href="https://leonardo-ga.github.io/typewriter-animation/" target="_blank" rel="noopener noreferrer"
+                        class="project-link">View demo</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+</body>
+</html>

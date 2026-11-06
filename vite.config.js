@@ -1,4 +1,6 @@
-const isCodeSandbox = 'SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in process.env
+import { fileURLToPath } from 'node:url';
+
+const isCodeSandbox = 'SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in process.env;
 
 export default {
     root: 'src/',
@@ -14,6 +16,13 @@ export default {
         outDir: '../docs',
         emptyOutDir: true,
         sourcemap: true,
-        target: 'esnext' // makes build work...
+        rollupOptions: {
+            input: {
+                home: fileURLToPath(new URL('./src/index.html', import.meta.url)),
+                mathematics: fileURLToPath(new URL('./src/mathematics.html', import.meta.url)),
+                development: fileURLToPath(new URL('./src/development.html', import.meta.url))
+            }
+        },
+        target: 'esnext' // The optional globe module uses top-level await.
     }
-}
+};

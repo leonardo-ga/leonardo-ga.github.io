@@ -15,12 +15,10 @@ export default class Stars {
     loadModel() {
         const verts = [];
         const colors = [];
-        const positions = [];
         let col;
         for (let i = 0; i < this.numStars; i += 1) {
             let p = this.randomSpherePoint();
             const { pos, hue } = p;
-            positions.push(p);
             col = new THREE.Color().setHSL(hue, 0.2, Math.random());
             verts.push(pos.x, pos.y, pos.z);
             colors.push(col.r, col.g, col.b);
@@ -33,7 +31,9 @@ export default class Stars {
         this.mat = new THREE.PointsMaterial({
             size: 0.2,
             vertexColors: true,
-            map: this.sprite
+            alphaMap: this.sprite,
+            transparent: true,
+            depthWrite: false
         });
 
         this.model = new THREE.Points(this.geo, this.mat);
@@ -51,8 +51,7 @@ export default class Stars {
 
         return {
             pos: new THREE.Vector3(x, y, z),
-            hue: 0.6, // radius * 0.02 + 0.5
-            minDist: radius,
+            hue: 0.6,
         };
     }
 

@@ -1,14 +1,20 @@
-# This is my portfolio
+﻿# Leonardo Gasparro's portfolio
 
-> *Work in progress!!!*
+A Vite site with separate Mathematics and Software Development pages, shared light/dark themes, and an optional Three.js globe on the software page.
 
-``` bash
-# Install dependencies (only the first time)
+## Local development
+
+```bash
 npm install
-
-# Run the local server at localhost:8080
 npm run dev
+```
 
-# Build for production in the dist/ directory
+Vite prints the local URL (normally http://localhost:5173). Edit files under `src/`; static assets live in `static/`. Local edits do not require a production build.
+
+## Production
+
+```bash
 npm run build
 ```
+
+The build includes all three pages and writes the published site to `docs/`. If GitHub Pages serves that directory, rebuild it before publishing source changes. Do not edit generated files directly.

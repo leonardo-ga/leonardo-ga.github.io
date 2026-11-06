@@ -1,89 +1,90 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
 import InteractiveEarth from './models/InteractiveEarth';
 import Stars from './models/Stars';
 
-// Canvas
-const canvas = document.querySelector('canvas.webgl-background')
+const root = document.documentElement;
+const canvas = document.querySelector('canvas.webgl-background');
+if (!canvas) throw new Error('Globe canvas is missing');
 
-// Sizes
-const sizes = { width: window.innerWidth, height: window.innerHeight };
+// Reject the import on texture failure so the appearance control can show a fallback.
+const loader = new THREE.TextureLoader();
+const [starSprite, colorMap, elevMap, alphaMap] = await Promise.all([
+  loader.loadAsync('./textures/circle.png'),
+  loader.loadAsync('./textures/04_rainbow1k.jpg'),
+  loader.loadAsync('./textures/01_earthbump1k.jpg'),
+  loader.loadAsync('./textures/02_earthspec1k.jpg')
+]);
 
-// Scene
 const scene = new THREE.Scene();
+const earth = new InteractiveEarth({ icoDetail: 10, pointsDetail: 120, textures: { colorMap, elevMap, alphaMap } });
+const stars = new Stars({ numStars: 4500, textures: { sprite: starSprite } });
+scene.add(earth.model, stars.model);
 
-// Earth and Stars
-const textureLoader = new THREE.TextureLoader();
-const starSprite = textureLoader.load("./textures/circle.png");
-const colorMap = textureLoader.load("./textures/04_rainbow1k.jpg");
-const elevMap = textureLoader.load("./textures/01_earthbump1k.jpg");
-const alphaMap = textureLoader.load("./textures/02_earthspec1k.jpg");
-
-const earth = new InteractiveEarth({
-    icoDetail: 10,
-    pointsDetail: 120,
-    textures: {
-        colorMap,
-        elevMap,
-        alphaMap
-    }
-});
-scene.add(earth.model);
-
-const stars = new Stars({
-    numStars: 4500,
-    textures: {
-        sprite: starSprite
-    }
-});
-scene.add(stars.model);
-
-// Lights
-/*const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 1);
-pointLight.position.set(5, 5, 5);
-scene.add(pointLight);*/
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820, 3);
-scene.add(hemiLight);
-
-// Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 100);
 camera.position.z = 2;
-scene.add(camera);
-
-// Renderer
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-renderer.setSize(sizes.width, sizes.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+let frame = null;
+let lastTime = null;
 
-// Track scroll
-let scrollY = 0;
-window.addEventListener('scroll', () => {
-    scrollY = window.scrollY;
-});
-
-// Animate
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Rotate Earth
-    earth.update();
-
-    // Parallax effect based on scroll
-    camera.position.y = -scrollY * 0.001;  // subtle vertical parallax
-
-    renderer.render(scene, camera);
+const enabled = () => root.dataset.globe === 'on' && !document.hidden;
+const render = () => {
+  camera.position.y = -window.scrollY * 0.001;
+  renderer.render(scene, camera);
+};
+function animate(time) {
+  frame = null;
+  if (!enabled() || motionPreference.matches) return;
+  const delta = lastTime === null ? 0 : Math.min((time - lastTime) / 1000, 0.05);
+  lastTime = time;
+  earth.update(delta);
+  render();
+  frame = requestAnimationFrame(animate);
+}
+function syncAnimation() {
+  if (frame !== null) cancelAnimationFrame(frame);
+  frame = null;
+  lastTime = null;
+  if (!enabled()) return;
+  render();
+  if (!motionPreference.matches) frame = requestAnimationFrame(animate);
+}
+function resize() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  if (enabled()) render();
+}
+function syncTheme() {
+  const dark = root.dataset.theme === 'dark';
+  if (stars.mat.vertexColors !== dark) {
+    stars.mat.vertexColors = dark;
+    stars.mat.needsUpdate = true;
+  }
+  stars.mat.color.set(dark ? 0xffffff : 0x4b5563);
+  stars.mat.opacity = dark ? 0.85 : 0.55;
+  earth.mat.color.set(dark ? 0x202020 : 0x8c949e);
+  earth.mat.transparent = true;
+  earth.mat.opacity = dark ? 1 : 0.25;
+  earth.uniforms.colorStrength.value = dark ? 1 : 0.65;
+  if (enabled()) render();
 }
 
-animate();
-
-// Resize
-window.addEventListener('resize', () => {
-    sizes.width = window.innerWidth;
-    sizes.height = window.innerHeight;
-
-    camera.aspect = sizes.width / sizes.height;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(sizes.width, sizes.height);
+resize();
+syncTheme();
+syncAnimation();
+requestAnimationFrame(() => root.classList.add('globe-ready'));
+new MutationObserver(syncTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+window.addEventListener('globechange', syncAnimation);
+document.addEventListener('visibilitychange', syncAnimation);
+motionPreference.addEventListener('change', syncAnimation);
+window.addEventListener('resize', resize);
+window.addEventListener('scroll', () => {
+  if (enabled() && motionPreference.matches) render();
+}, { passive: true });
+window.addEventListener('pagehide', () => {
+  if (frame !== null) cancelAnimationFrame(frame);
+  frame = null;
 });
+window.addEventListener('pageshow', syncAnimation);

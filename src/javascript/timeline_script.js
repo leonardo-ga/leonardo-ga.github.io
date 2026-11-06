@@ -1,45 +1,57 @@
-import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm";
-import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger/+esm";
+﻿const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 
-gsap.registerPlugin(ScrollTrigger);
+document.querySelectorAll('.timeline-progress').forEach(progressLine => {
+  const container = progressLine.parentElement;
+  const items = [...container.querySelectorAll('.timeline-item')];
+  let revealedIndex = -1;
+  let observer;
 
-const items = gsap.utils.toArray(".timeline-item");
-const progressLines = gsap.utils.toArray(".timeline-progress");
+  const updateLine = () => {
+    const item = items[revealedIndex];
+    const height = item ? Math.min(item.offsetTop + item.offsetHeight - 8, container.clientHeight - 8) : 0;
+    progressLine.style.height = `${Math.max(0, height)}px`;
+  };
+  const reveal = (item, index) => {
+    item.classList.remove('reveal-pending');
+    revealedIndex = Math.max(revealedIndex, index);
+    updateLine();
+    observer?.unobserve(item);
+  };
+  const revealAll = () => {
+    observer?.disconnect();
+    items.forEach(reveal);
+  };
 
-// cycle through the progress lines
-progressLines.forEach((progressLine) => {
-  const mapCounter = new Map();
-  let count = -1;
-
-  // cycle through the items
-  items.forEach((item, index) => {
-    if(progressLine.parentNode === item.parentNode) {
-      // animate items
-      gsap.to(item, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: item,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
+  if (motionPreference.matches || !('IntersectionObserver' in window)) {
+    revealAll();
+  } else {
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) reveal(entry.target, items.indexOf(entry.target));
       });
+    }, { rootMargin: '0px 0px -15% 0px', threshold: 0 });
 
-      const lineHeight = item.offsetTop + item.offsetHeight; // full height to this item
-      // Shrink to previous item's bottom, or 0 if first item
-      count++;
-      const prevHeight = count === 0 ? 0 : mapCounter.get((count - 1).toString());
-      // animate line
-      mapCounter.set(count.toString(), lineHeight);
-      ScrollTrigger.create({
-        trigger: item,
-        start: "top 85%",
-        end: "bottom 85%",
-        onEnter: () => gsap.to(progressLine, { height: lineHeight, duration: 0.3 }),
-        onLeaveBack: () => gsap.to(progressLine, { height: prevHeight, duration: 0.3 }),
-        //markers: true
+    let visibleOrder = 0;
+    items.forEach((item, index) => {
+      item.classList.add('scroll-reveal', 'reveal-pending');
+      const rect = item.getBoundingClientRect();
+      if (rect.top < innerHeight * 0.85 && rect.bottom > 0) {
+        item.style.setProperty('--reveal-delay', `${0.4 + visibleOrder++ * 0.12}s`);
+        requestAnimationFrame(() => requestAnimationFrame(() => reveal(item, index)));
+      } else {
+        observer.observe(item);
+      }
+      item.addEventListener('focusin', () => {
+        item.style.setProperty('--reveal-delay', '0s');
+        reveal(item, index);
       });
-    }
+    });
+  }
+
+  motionPreference.addEventListener('change', event => {
+    if (event.matches) revealAll();
   });
-})
+  if ('ResizeObserver' in window) new ResizeObserver(updateLine).observe(container);
+  else window.addEventListener('resize', updateLine);
+  document.fonts?.ready.then(updateLine);
+});
