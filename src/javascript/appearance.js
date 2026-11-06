@@ -48,10 +48,38 @@
 
     const globeButton = document.querySelector('[data-globe-toggle]');
     if (!globeButton) return;
-    let enabled = read('portfolio-globe') === 'on' ||
-      (read('portfolio-globe') !== 'off' && !reducedMotion.matches);
+    let enabled = read('portfolio-globe') === 'on';
     let loading;
     let failed = false;
+    const globeTip = document.querySelector('#globe-tip');
+    let tipSeen = false;
+    let hintReady = false;
+    let hintTimer;
+    let hideTimer;
+    const hideTip = () => {
+      clearTimeout(hintTimer);
+      clearTimeout(hideTimer);
+      hintTimer = undefined;
+      globeTip.hidden = true;
+      globeButton.removeAttribute('aria-describedby');
+    };
+    const showTip = () => {
+      const position = globeButton.getBoundingClientRect();
+      if (document.hidden || enabled || failed || tipSeen || position.top < 0 || position.bottom > innerHeight) return;
+      globeTip.hidden = false;
+      globeButton.setAttribute('aria-describedby', 'globe-tip');
+      tipSeen = true;
+      hideTimer = setTimeout(hideTip, 8000);
+    };
+    const scheduleTip = () => {
+      if (hintTimer || document.hidden || enabled || failed || tipSeen) return;
+      if (hintReady) return showTip();
+      hintTimer = setTimeout(() => {
+        hintTimer = undefined;
+        hintReady = true;
+        showTip();
+      }, 5000);
+    };
     const updateGlobe = () => {
       root.dataset.globe = enabled ? 'on' : 'off';
       globeButton.setAttribute('aria-pressed', String(enabled));
@@ -69,10 +97,27 @@
       }
     };
     globeButton.addEventListener('click', () => {
+      hideTip();
+      tipSeen = true;
       enabled = !enabled;
       save('portfolio-globe', enabled ? 'on' : 'off');
       updateGlobe();
     });
     updateGlobe();
+    scheduleTip();
+    document.addEventListener('visibilitychange', () => {
+      hideTip();
+      scheduleTip();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') hideTip();
+    });
+    document.addEventListener('click', () => {
+      if (!globeTip.hidden) hideTip();
+    });
+    window.addEventListener('scroll', scheduleTip, { passive: true });
+    window.addEventListener('headerchange', scheduleTip);
+    window.addEventListener('pagehide', hideTip);
+    window.addEventListener('pageshow', scheduleTip);
   });
 })();

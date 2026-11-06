@@ -23,6 +23,7 @@
     </script>
     <script type="module" src="./javascript/appearance.js"></script>
     <script type="module" src="./javascript/page-motion.js"></script>
+    <script type="module" src="./javascript/compact-navigation.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="./my-favicon.png">
 
@@ -49,14 +50,18 @@
         </header>
         <nav class="career-choices" aria-label="Explore my work">
             <a class="career-choice choice-math" href="./mathematics/">
-            <span class="career-symbol" aria-hidden="true">&forall;</span>
-            <h2>Mathematician</h2>
+            <div class="career-choice-heading">
+                <span class="career-symbol" aria-hidden="true">&forall;</span>
+                <h2>Mathematician</h2>
+            </div>
             <p>Research in mathematical logic, publications, and academic life.</p>
 
             </a>
             <a class="career-choice choice-dev" href="./software/">
-            <span class="career-symbol" aria-hidden="true">&lt;/&gt;</span>
-            <h2>Software Developer</h2>
+            <div class="career-choice-heading">
+                <span class="career-symbol" aria-hidden="true">&lt;/&gt;</span>
+                <h2>Software Developer</h2>
+            </div>
             <p>Professional experience, web applications, and interactive projects.</p>
 
             </a>
