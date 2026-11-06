@@ -328,7 +328,7 @@ a:hover {
 }
 
 .career-header {
-  padding-top: var(--section-space);
+  padding-top: 24px;
   padding-bottom: 16px;
 }
 
