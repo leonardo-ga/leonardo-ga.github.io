@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematician | Leonardo Gasparro</title>
+    <script>
+        (() => {
+            let theme;
+            try { theme = localStorage.getItem('portfolio-theme'); } catch {}
+            document.documentElement.dataset.theme = ['light', 'dark'].includes(theme)
+                ? theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            try {
+                const motion = JSON.parse(sessionStorage.getItem('portfolio-name-transition'));
+                if (motion && motion.destination === location.pathname && Date.now() - motion.time < 10000
+                    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.dataset.namePending = '';
+                    setTimeout(() => delete document.documentElement.dataset.namePending, 1500);
+                }
+            } catch {}
+        })();
+    </script>
+    
+    
+    
+    <link rel="icon" type="image/png" href="./my-favicon.png">
+
+    <meta name="google-site-verification" content="lAN7mgK0pbM2lvqXskIQ27BINFMNxp_0ydv0qoD0PsA" />
+    <meta name="description" content="Doctoral research in Mathematics at Università degli Studi di Milano.">
+  <script type="module" crossorigin src="./assets/style-15215953.js"></script>
+  <link rel="stylesheet" href="./assets/style-efb77d99.css">
+</head>
+
+<body class="career-page career-math">
+    <div class="site-topbar">
+        <nav class="career-nav" aria-label="Main navigation">
+            <a href="./index.html">Home</a>
+            <a href="./mathematics.html" aria-current="page">Mathematics</a>
+            <a href="./development.html">Software development</a>
+        </nav>
+        <div class="appearance-controls" role="group" aria-label="Appearance">
+            <button type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button>
+        </div>
+    </div>
+    <header class="career-header">
+        <h1><span class="shared-name">Leonardo Raffaello Maximilian Gasparro</span></h1>
+        <p>Ph.D. student in Mathematics · Università degli Studi di Milano</p>
+    </header>
+    <main>
+        <section id="about">
+            <h2>Research interests</h2>
+            <p>I am a Ph.D. student in Mathematics at Università degli Studi di Milano, supervised by
+            Lorenzo Luperi Baglini, with co-advisor Luca Reggio.</p>
+            <p>My interests lie in mathematical logic, particularly nonstandard analysis and ultrafilters.
+            My work concerns extensions of relations to spaces of ultrafilters. I am also interested in
+            model theory, set theory, category theory, and connections with Ramsey theory.</p>
+        </section>
+
+        <div class="academic-sections">
+            <details class="academic-accordion" id="publications">
+                <summary><h2>Publications and Preprints</h2></summary>
+                <div class="accordion-content">
+                    <div class="academic-list">
+                        <div class="academic-entry">
+                            <div class="academic-date">2026</div>
+                            <div class="academic-content">
+                                <p><i>Weak, strong and mixed extensions of relations to spaces of ultrafilters</i>, with L. Luperi
+                                Baglini</p>
+                                <p>Published in <a href="https://doi.org/10.1002/malq.70022" target="_blank" rel="noopener noreferrer"><i>Mathematical Logic Quarterly</i></a>,
+                                72(3), e70022 (2026). Also available at <a href="https://arxiv.org/abs/2506.04692"
+                                target="_blank" rel="noopener noreferrer">arXiv:2506.04692</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="academic-accordion" id="events">
+                <summary><h2>Schools and Workshops</h2></summary>
+                <div class="accordion-content">
+                    <div class="academic-list">
+                        <div class="academic-entry">
+                            <div class="academic-date">2026</div>
+                            <div class="academic-content">
+                                <p><a href="https://academicweb.nd.edu/~cholak/rome2.html"
+                                target="_blank" rel="noopener noreferrer">Roma Logica: The Forum</a>, Notre Dame Rome</p>
+                                <p>Reverse mathematics and Ramsey-type principles, including Ramsey's and Hindman's theorems.</p>
+                            </div>
+                        </div>
+                        <div class="academic-entry">
+                            <div class="academic-date">2025</div>
+                            <div class="academic-content">
+                                <p>AILA Logic Summer School, University of Salerno</p>
+                                <p>Courses in model theory and computability theory.</p>
+                            </div>
+                        </div>
+                        <div class="academic-entry">
+                            <div class="academic-date">2016</div>
+                            <div class="academic-content">
+                                <p>Particle Detection Equipment Construction, CERN, Geneva</p>
+                                <p>Built cosmic-particle detection chambers and attended physics lectures.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details class="academic-accordion" id="education">
+                <summary><h2>Education</h2></summary>
+                <div class="accordion-content">
+                    <div class="academic-list">
+                        <div class="academic-entry">
+                            <div class="academic-date">present</div>
+                            <div class="academic-content">
+                                <h3>Ph.D. in Mathematics <span class="degree-status">(in progress)</span></h3>
+                                <span>Università degli Studi di Milano</span>
+                                <p>Advisor: Lorenzo Luperi Baglini</p>
+                                <p>Co-advisor: Luca Reggio</p>
+                            </div>
+                        </div>
+                        <div class="academic-entry">
+                            <div class="academic-date">2025</div>
+                            <div class="academic-content">
+                                <h3>LM-40 MSc in Mathematics</h3>
+                                <span>Università degli Studi di Milano</span>
+                                <p>Thesis: <i>Nonstandard methods of ultrafilter relation extensions</i></p>
+                                <p>Advisor: Lorenzo Luperi Baglini</p>
+                                <p>Final grade: 110/110 cum laude</p>
+                            </div>
+                        </div>
+                        <div class="academic-entry">
+                            <div class="academic-date">2022</div>
+                            <div class="academic-content">
+                                <h3>L-35 Bachelor's in Mathematics</h3>
+                                <span>Università degli Studi di Milano</span>
+                                <p>Final grade: 108/110</p>
+                            </div>
+                        </div>
+                        <div class="academic-entry">
+                            <div class="academic-date">2018</div>
+                            <div class="academic-content">
+                                <h3>Italian Secondary Diploma</h3>
+                                <span>Liceo Scientifico Gandini</span>
+                                <p>Year Abroad: Gainesville High School, USA, 2015 - 2016</p>
+                                <p>Final grade: 100/100</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </main>
+</body>
+</html>

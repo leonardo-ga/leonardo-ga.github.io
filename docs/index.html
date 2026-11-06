@@ -4,223 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gasparro LRM</title>
+    <title>Leonardo Gasparro | Mathematics &amp; Software</title>
+    <script>
+        (() => {
+            let theme;
+            try { theme = localStorage.getItem('portfolio-theme'); } catch {}
+            document.documentElement.dataset.theme = ['light', 'dark'].includes(theme)
+                ? theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            try {
+                const motion = JSON.parse(sessionStorage.getItem('portfolio-name-transition'));
+                if (motion && motion.destination === location.pathname && Date.now() - motion.time < 10000
+                    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.dataset.namePending = '';
+                    setTimeout(() => delete document.documentElement.dataset.namePending, 1500);
+                }
+            } catch {}
+        })();
+    </script>
     
-    <link rel="icon" type="image/x-icon" href="./my-favicon.png">
-
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     
     
-    
+    <link rel="icon" type="image/png" href="./my-favicon.png">
 
     <meta name="google-site-verification" content="lAN7mgK0pbM2lvqXskIQ27BINFMNxp_0ydv0qoD0PsA" />
-  <script type="module" crossorigin src="./assets/index-2c26bd50.js"></script>
-  <link rel="stylesheet" href="./assets/index-e320c2a9.css">
+    <meta name="description" content="Explore the mathematics research and software development work of Leonardo Raffaello Maximilian Gasparro.">
+  <script type="module" crossorigin src="./assets/style-15215953.js"></script>
+  <link rel="stylesheet" href="./assets/style-efb77d99.css">
 </head>
 
-<body>
-    <header>
-        <h1>Hi, I'm Leonardo Raffaello Maximilian Gasparro</h1>
-        <p><span
-                class="text-mathematics">\(\mathbb{M}\mathbb{A}\mathbb{T}\mathbb{H}\mathbb{E}\mathbb{M}\mathbb{A}\mathbb{T}\mathbb{I}\mathbb{C}\mathbb{I}\mathbb{A}\mathbb{N}\)</span>
-            and <code class="text-developer">software developer</code></p>
-    </header>
-
-    <canvas class="webgl-background"></canvas>
-    <canvas class="webgl-frontground"></canvas>
-
-    <section class="timeline" data-type="experience">
-        <h2>Experience</h2>
-
-        <div class="timeline-container">
-            <div class="timeline-progress"></div>
-
-            <div class="timeline-item">
-                <div class="timeline-icon">Jan 2026 - present</div>
-                <div class="timeline-content">
-                    <h3>Front-end software developer</h3>
-                    <span>(IRISCUBE) Reply, Milano</span>
-                    <p>Developed banking web applications for Reply clients. Primary front-end engineer in Business Unit.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">May 2022 - Sept 2024</div>
-                <div class="timeline-content">
-                    <h3>Java Full-Stack Developer</h3>
-                    <span>Accenture, Milano</span>
-                    <p>Developed banking web applications for Accenture clients, focusing on robo-advisory and digital
-                        investment platforms.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">2018 - 2022</div>
-                <div class="timeline-content">
-                    <h3>Private Tutor</h3>
-                    <span>Freelancer</span>
-                    <p>Provided tutoring in Mathematics, Physics and English, deeloping strong pedagogical and
-                        explanatory skills.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">August 2017</div>
-                <div class="timeline-content">
-                    <h3>Archive Intern</h3>
-                    <span>Generali, Lodi</span>
-                    <p>Reorganized and analyzed document archives at an insurance company.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">August 2016</div>
-                <div class="timeline-content">
-                    <h3>Particle Detection Equipment Constructor</h3>
-                    <span>CERN, Geneva</span>
-                    <p>Constructed experimental chambers for cosmic particle detection. Attended physics lectures and
-                        gained practical laboratory experience.</p>
-                </div>
-            </div>
+<body class="career-home">
+    <div class="site-topbar">
+        <nav class="career-nav" aria-label="Main navigation">
+            <a href="./index.html" aria-current="page">Home</a>
+            <a href="./mathematics.html">Mathematics</a>
+            <a href="./development.html">Software development</a>
+        </nav>
+        <div class="appearance-controls" role="group" aria-label="Appearance">
+            <button type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button>
         </div>
-    </section>
+    </div>
+    <main class="career-landing">
+        <header class="landing-header">
+            <p class="eyebrow">Mathematics &amp; Software</p>
+            <h1>Hi, I'm <span class="shared-name">Leonardo Raffaello Maximilian Gasparro</span></h1>
+            <p>Two sides of my work. Choose the one you'd like to explore.</p>
+        </header>
+        <nav class="career-choices" aria-label="Explore my work">
+            <a class="career-choice choice-math" href="./mathematics.html">
+            <span class="career-symbol" aria-hidden="true">&forall;</span>
+            <h2>Mathematician</h2>
+            <p>Research in mathematical logic, publications, and academic life.</p>
 
-    <section class="timeline" data-type="education">
-        <h2>Education</h2>
+            </a>
+            <a class="career-choice choice-dev" href="./development.html">
+            <span class="career-symbol" aria-hidden="true">&lt;/&gt;</span>
+            <h2>Software Developer</h2>
+            <p>Professional experience, web applications, and interactive projects.</p>
 
-        <div class="timeline-container">
-            <div class="timeline-progress"></div>
-
-            <div class="timeline-item">
-                <div class="timeline-icon">Sept 2022 - April 2025</div>
-                <div class="timeline-content">
-                    <h3>MSc in Mathematics</h3>
-                    <span>Università degli Studi di Milano</span>
-                    <p>Thesis: <i>Nonstandard methods for ultrafilter relation extensions</i></p>
-                    <p>Advisor: Lorenzo Luperi Baglini</p>
-                    <p>Final grade: 110/110 cum Laude</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">Sept 2018 - April 2022</div>
-                <div class="timeline-content">
-                    <h3>BSc in Mathematics</h3>
-                    <span>Università degli Studi di Milano</span>
-                    <p>Final grade: 108/110</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">Sept 2013 - April 2018</div>
-                <div class="timeline-content">
-                    <h3>Italian Secondary Diploma</h3>
-                    <span>Liceo Scientifico Gandini</span>
-                    <p>Year Abroad: Gainesville High School, USA, 2015 - 2016</p>
-                    <p>Final grade: 100/100</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="timeline" data-type="publication">
-        <h2>Publications and Research</h2>
-
-        <div class="timeline-container">
-            <div class="timeline-progress"></div>
-
-            <div class="timeline-item">
-                <div class="timeline-icon">2025</div>
-                <div class="timeline-content">
-                    <p><i>Weak, strong and mixed extensions of relations to spaces of ultrafilters</i>, with L. Luperi
-                        Baglini</p>
-                    <p>Preprint, available at <a href="https://arxiv.org/abs/2506.04692"
-                            target="_blank">arXiv:2506.04692</a></p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-icon">2025</div>
-                <div class="timeline-content">
-                    <p>Participant, AILA Logic Summer School</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section id="about">
-        <h2>About Me</h2>
-        <p>Mathematician with a focus on Model Theory, Set Theory, Category Theory, and Nonstandard Analysis.
-            Experienced in independent research, including original work on ultrafilter relation extensions. Programming
-            experience, developed both professionally and academically, complements my mathematical work,
-            especially in computational logic experiments and mathematical modeling.</p>
-    </section>
-
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="projects-grid">
-
-            <div class="project-card">
-                <div class="project-preview">
-                    <!--<iframe src="https://leonardo-ga.github.io/car-physics-engine" loading="lazy"></iframe>-->
-                    <embed src="https://leonardo-ga.github.io/car-physics-engine">
-                </div>
-                <div class="project-info">
-                    <h3>Car Physics Engine</h3>
-                    <p>A physics engine specifically for cars.</p>
-                    <a href="https://leonardo-ga.github.io/car-physics-engine/#debug" target="_blank"
-                        class="project-link">View Project →</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-preview">
-                    <embed src="https://leonardo-ga.github.io/morphing-shapes">
-                </div>
-                <div class="project-info">
-                    <h3>Morphing Three.js geometry</h3>
-                    <p>An exibition on how to transition between cubes and spheres in a continuous way.</p>
-                    <a href="https://leonardo-ga.github.io/morphing-shapes" target="_blank" class="project-link">View
-                        Project →</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-preview">
-                    <!--<iframe src="https://leonardo-ga.github.io/calc-net-salary-from-ral" loading="lazy"></iframe>-->
-                    <embed src="https://leonardo-ga.github.io/calc-net-salary-from-ral">
-                </div>
-                <div class="project-info">
-                    <h3>Net salary calculator</h3>
-                    <p>A simple simulator of your net salary, given your RAL and other secondary information.</p>
-                    <a href="https://leonardo-ga.github.io/calc-net-salary-from-ral" target="_blank" class="project-link">View Project
-                        →</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-preview">
-                    <!--<iframe src="https://leonardo-ga.github.io/sudoku-z3" loading="lazy"></iframe>-->
-                    <embed src="https://leonardo-ga.github.io/sudoku-z3">
-                </div>
-                <div class="project-info">
-                    <h3>Sudoku Game Engine</h3>
-                    <p>A minimal Sudoku game engine with solution verification and solution finder.</p>
-                    <a href="https://leonardo-ga.github.io/sudoku-z3" target="_blank" class="project-link">View Project
-                        →</a>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-preview">
-                    <!--<iframe src="https://leonardo-ga.github.io/typewriter-animation/" loading="lazy"></iframe>-->
-                    <embed src="https://leonardo-ga.github.io/typewriter-animation/">
-                </div>
-                <div class="project-info">
-                    <h3>A Simple Typewriter Animation</h3>
-                    <p>A minimal JavaScript project that simulates a typewriter effect with customizable speed and text.
-                    </p>
-                    <a href="https://leonardo-ga.github.io/typewriter-animation/" target="_blank"
-                        class="project-link">View Project →</a>
-                </div>
-            </div>
-
-        </div>
-    </section>
+            </a>
+        </nav>
+    </main>
 </body>
-
 </html>
